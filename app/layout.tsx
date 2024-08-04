@@ -7,6 +7,7 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Weather App",
   description: "Created by Daniel Fernandes",
+  manifest: "manifest.json",
 };
 
 export default function RootLayout({

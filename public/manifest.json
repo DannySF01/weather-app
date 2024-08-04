@@ -1,0 +1,21 @@
+{
+    "name": "Weather App",
+    "short_name": "Weather",
+    "description": "A progressive weather application",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#000000",
+    "icons": [
+      {
+        "src": "/icons/weather_icon_128x128.png",
+        "sizes": "128x128",
+        "type": "image/png"
+      },
+      {
+        "src": "/icons/weather_icon_512x512.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      }
+    ]
+  }

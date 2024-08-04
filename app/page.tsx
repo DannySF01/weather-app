@@ -33,7 +33,7 @@ async function getTodayWeather() {
     API_URL +
       "/" +
       today +
-      "+01:00/t_2m:C,weather_symbol_1h:idx/41.0410042,-8.271775/json?model=mix",
+      "+01:00/t_2m:C,weather_symbol_1h:idx,wind_speed_10m:ms,uv:idx,wind_dir_10m:d,precip_1h:mm/41.0410042,-8.271775/json?model=mix",
     {
       method: "GET",
       headers: headers,
@@ -47,6 +47,10 @@ async function getTodayWeather() {
       return {
         temperature: data.data[0].coordinates[0].dates[0].value.toFixed(),
         weather_icon: data.data[1].coordinates[0].dates[0].value,
+        wind_speed: data.data[2].coordinates[0].dates[0].value.toFixed(),
+        uv: data.data[3].coordinates[0].dates[0].value,
+        wind_direction: data.data[4].coordinates[0].dates[0].value,
+        precipitation: data.data[5].coordinates[0].dates[0].value.toFixed(),
       };
     })
     .catch(function (err) {
@@ -189,7 +193,7 @@ function displayWeatherIcon(weather_icon_code: number) {
 }
 
 export default async function Home() {
-  const LOCATION = "Castelo de Paiva, Portugal";
+  const LOCATION = "Castelo de Paiva";
   const ACCESS_TOKEN = await getAccessToken();
 
   const today_weather = await getTodayWeather();
@@ -197,41 +201,87 @@ export default async function Home() {
   const week_forecast = await getWeekForecast();
 
   return (
-    <main className="flex min-h-screen p-8 bg-white text-black gap-8">
-      <div className="w-2/3">
-        <h1 className="text-2xl font-bold pb-12">{LOCATION}</h1>
-        <p className="text-4xl font-bold pb-12">
-          {today_weather?.temperature}°C
-          {displayWeatherIcon(today_weather?.weather_icon)}
-        </p>
-        <div className="flex flex-col bg-gray-100 p-6 rounded-2xl">
-          <p className="pb-4">TODAY FORECAST</p>
-          <div className="flex justify-between">
+    <main className="overflow-hidden">
+      <div className="grid lg:grid-cols-3 grid-cols-1 lg:grid-rows-3 lg:grid-flow-col gap-x-6 gap-y-4 py-6 px-4 lg:p-6 min-h-screen">
+        <div className="lg:col-span-2 p-6">
+          <h1 className="text-2xl pb-8">{LOCATION}</h1>
+          <p className="grid grid-cols-2 text-7xl pb-8">
+            <span>{today_weather?.temperature}°</span>
+            <span className="text-center">
+              {displayWeatherIcon(today_weather?.weather_icon)}
+            </span>
+          </p>
+        </div>
+        <div className="grid lg:col-span-2 bg-blue-950 bg-opacity-30 p-6 rounded-2xl gap-2">
+          <p>TODAY FORECAST</p>
+          <div className="grid grid-flow-col">
             {today_forecast?.date.map((day: any, index: number) => (
-              <p className="text-2xl font-bold" key={index}>
-                {day.value.toFixed()}°C
-                {displayWeatherIcon(today_forecast?.weather_icon[index].value)}
-                <br />
-                {new Date(day.date).getHours() + ":00"}
-              </p>
+              <div
+                className="lg:text-2xl grid justify-items-center"
+                key={index}
+              >
+                <span className="font-bold">{day.value.toFixed()}°</span>
+                <span>
+                  {displayWeatherIcon(
+                    today_forecast?.weather_icon[index].value
+                  )}
+                </span>
+                <span>{new Date(day.date).getHours() + ":00"}</span>
+              </div>
             ))}
           </div>
         </div>
-      </div>
-      <div className="flex flex-col bg-gray-100 p-6 w-1/3 rounded-2xl justify-between">
-        7 DAYS FORECAST
-        {week_forecast?.map((day: any, index: number) => (
-          <p className="p-2" key={index}>
-            {new Date(day.date).toLocaleDateString("pt-PT", {
-              weekday: "long",
-            }) +
-              " : " +
-              day.max +
-              "/ " +
-              day.min}
-            {displayWeatherIcon(day.weather_icon)}
-          </p>
-        ))}
+        <div className="grid lg:col-span-2 bg-blue-950 bg-opacity-30 p-6 rounded-2xl gap-2">
+          <p>AIR CONDITIONS</p>
+          <div className="grid grid-cols-2 grid-rows-2 gap-4">
+            <div>
+              <p>Wind</p>
+              <p>{today_weather?.wind_speed} m/s</p>
+            </div>
+            <div>
+              <span>Wind Direction</span>
+              <div className="text-end relative">
+                <div className="absolute">
+                  <p
+                    style={{
+                      transform: `rotate(${today_weather?.wind_direction}deg)`,
+                    }}
+                  >
+                    ⬆
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div>
+              <p>UV Index</p>
+              <p>{today_weather?.uv}</p>
+            </div>
+            <div>
+              <p>Precipitation</p>
+              <p>{today_weather?.precipitation} %</p>
+            </div>
+          </div>
+        </div>
+        <div className="flex flex-col lg:row-span-3 bg-blue-950 bg-opacity-30 p-6 rounded-2xl gap-2">
+          <p>7 DAYS FORECAST</p>
+          <div className="flex-1 grid items-center grid-rows-7">
+            {week_forecast?.map((day: any, index: number) => (
+              <div className="grid grid-cols-3" key={index}>
+                <span>
+                  {new Date(day.date).toLocaleDateString("en-EN", {
+                    weekday: "long",
+                  })}
+                </span>
+                <span className="text-center">
+                  {displayWeatherIcon(day.weather_icon)}
+                </span>
+                <span className="text-end">
+                  {day.max.toFixed(0) + " / " + day.min.toFixed(0)}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </main>
   );
