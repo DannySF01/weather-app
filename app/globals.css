@@ -1,6 +1,14 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  /* Cores dinâmicas para a tua App de Weather */
+  --color-cold: #3b82f6;
+  --color-warm: #f97316;
+  --color-hot: #ef4444;
+
+  /* Custom border-radius mais suave para os teus cards */
+  --radius-weather: 2rem;
+}
 
 :root {
   --color: 255, 255, 255;
@@ -26,4 +34,17 @@ body {
   color: rgb(var(--color));
   background: linear-gradient(to bottom, transparent, var(--background-end))
     var(--background-start);
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@utility glass-effect {
+  background-color: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
