@@ -12,28 +12,26 @@
 
 :root {
   --color: 255, 255, 255;
-  --background-start: #082f49;
-  --background-end: #0284c7;
+  --background: bg-[#0b131e];
   --card: #172554;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --color: 255, 255, 255;
-    --background-start: #020617;
-    --background-end: #030b2c;
+    --background: bg-[#0b131e];
     --card: #172554;
   }
 }
 
 @theme inline {
+  --color: var(--color-cold);
+  --background: var(--background);
   --card-background: var(--card);
 }
 
 body {
-  color: rgb(var(--color));
-  background: linear-gradient(to bottom, transparent, var(--background-end))
-    var(--background-start);
+  @apply bg-[#0b131e] text-white;
 }
 
 @utility no-scrollbar {

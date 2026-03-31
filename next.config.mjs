@@ -11,7 +11,6 @@ const pwa = withPWA({
 });
 
 const nextConfig = pwa({
-  output: "export",
   assetPrefix: isProd ? `/${repoName}/` : "",
   basePath: isProd ? `/${repoName}` : "",
   trailingSlash: true,
