@@ -2,17 +2,11 @@
   "name": "weather-app",
   "version": "0.1.0",
   "private": false,
-  "homepage": "https://dannysf01.github.io/weather-app",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/DannySF01/weather-app.git"
-  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "deploy": "next build && gh-pages -d out"
+    "lint": "next lint"
   },
   "dependencies": {
     "@tailwindcss/postcss": "^4.2.2",
