@@ -68,7 +68,7 @@ export default function WeatherDashboard({
 
   return (
     <main className="max-w-7xl mx-auto min-h-screen  text-white p-4 lg:p-8 overflow-x-hidden">
-      <div className="flex justify-between items-center px-2">
+      <div className="flex justify-between items-center">
         <GeoSearch
           onSelect={(city) =>
             setLocation({
@@ -80,7 +80,7 @@ export default function WeatherDashboard({
             })
           }
         />
-        <p className="text-slate-400 text-xs font-bold tracking-widest uppercase">
+        <p className="text-slate-400 text-xs font-bold tracking-widest uppercase text-center">
           {new Date().toLocaleDateString("pt-PT", {
             day: "2-digit",
             month: "long",
