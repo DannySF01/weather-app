@@ -2,7 +2,20 @@
 import { useState, useEffect, useRef } from "react";
 import { searchCity } from "../../services/geocoding";
 
-export const GeoSearch = ({ onSelect }: { onSelect: (city: any) => void }) => {
+interface Location {
+  lat: number;
+  lon: number;
+  address: {
+    city: string;
+    country: string;
+  };
+}
+
+export const GeoSearch = ({
+  onSelect,
+}: {
+  onSelect: (location: Location) => void;
+}) => {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<any[]>([]);
   const [isOpen, setIsOpen] = useState(false);
@@ -37,9 +50,7 @@ export const GeoSearch = ({ onSelect }: { onSelect: (city: any) => void }) => {
   return (
     <div ref={containerRef} className="relative w-full max-w-md z-50">
       <div className="relative group">
-        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-blue-400 transition-colors">
-          🔍
-        </span>
+        <span className="absolute left-4 top-1/2 -translate-y-1/2">🔍</span>
         <input
           type="text"
           value={query}
@@ -51,19 +62,23 @@ export const GeoSearch = ({ onSelect }: { onSelect: (city: any) => void }) => {
 
       {isOpen && results.length > 0 && (
         <ul className="absolute mt-2 w-full bg-[#1b2635] border border-white/10 rounded-2xl overflow-hidden shadow-2xl backdrop-blur-xl animate-in fade-in slide-in-from-top-2 duration-200">
-          {results.map((city) => (
+          {results.map((loc) => (
             <li
-              key={city.id}
+              key={loc.id}
               onClick={() => {
-                onSelect(city);
-                setQuery(city.name);
+                onSelect({
+                  lat: loc.latitude,
+                  lon: loc.longitude,
+                  address: { city: loc.name, country: loc.country },
+                });
+                setQuery(loc.name);
                 setIsOpen(false);
               }}
               className="px-5 py-3 hover:bg-white/5 cursor-pointer flex flex-col transition-colors border-b border-white/5 last:border-0"
             >
-              <span className="font-bold text-white text-sm">{city.name}</span>
-              <span className="text-[10px] text-slate-400 uppercase tracking-wider">
-                {city.admin1}, {city.country_code}
+              <span className="font-bold text-sm">{loc.name}</span>
+              <span className="text-[10px] text-muted uppercase tracking-wider">
+                {loc.admin1}, {loc.country_code}
               </span>
             </li>
           ))}

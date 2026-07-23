@@ -13,8 +13,13 @@ describe("WeatherCard", () => {
     today: {
       temperature: 25,
       weather_code: 1,
+      temperature_min: 20,
+      temperature_max: 30,
     },
-    location: "Lisboa",
+    location: {
+      city: "Lisboa",
+      country: "Portugal",
+    },
   };
 
   test("deve renderizar a localização e a temperatura corretamente", () => {

@@ -37,6 +37,8 @@ export async function getWeatherData({
         wind_direction: 0,
         uv_index: 0,
         humidity: 0,
+        temperature_min: 0,
+        temperature_max: 0,
       },
       forecast: {
         time: [],
@@ -63,6 +65,8 @@ export async function getWeatherData({
       wind_direction: data.current.winddirection_10m,
       uv_index: data.current.uv_index,
       humidity: data.current.relative_humidity_2m,
+      temperature_min: Math.round(data.daily.temperature_2m_min[0]),
+      temperature_max: Math.round(data.daily.temperature_2m_max[0]),
     },
     forecast: {
       // Pegamos as primeiras 24h

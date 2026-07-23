@@ -6,6 +6,8 @@ export type WeatherData = {
     wind_direction: number;
     uv_index: number;
     humidity: number;
+    temperature_min: number;
+    temperature_max: number;
   };
   forecast: {
     time: string[];

@@ -1,4 +1,9 @@
-export default function getWeatherIcon(weather_code: number) {
+interface WeatherIcon {
+  icon: string;
+  description: string;
+}
+
+export default function getWeatherIcon(weather_code: number): WeatherIcon {
   /*  Code	Description
     0	Clear sky
     1, 2, 3	Mainly clear, partly cloudy, and overcast
@@ -16,44 +21,56 @@ export default function getWeatherIcon(weather_code: number) {
   */
   switch (weather_code) {
     case 0:
-      return "☀️";
+      return { icon: "./icons/clear_sky.png", description: "Céu limpo" };
     case 1:
     case 2:
     case 3:
-      return "🌤️";
+      return {
+        icon: "./icons/cloudy.png",
+        description: "Parcialmente nublado",
+      };
     case 45:
     case 48:
-      return "🌫️";
+      return { icon: "./icons/fog.png", description: "Neblina" };
     case 51:
     case 53:
     case 55:
-      return "🌦️";
+      return { icon: "./icons/rain_light.png", description: "Chuva leve" };
     case 56:
     case 57:
-      return "🌧️";
+      return {
+        icon: "./icons/rain_moderate.png",
+        description: "Chuva moderada",
+      };
     case 61:
     case 63:
     case 65:
-      return "🌧️";
+      return { icon: "./icons/rain_heavy.png", description: "Chuva forte" };
     case 66:
     case 67:
-      return "🌨️";
+      return { icon: "./icons/rain_snow.png", description: "Chuva de neve" };
     case 71:
     case 73:
     case 75:
-      return "🌨️";
+      return { icon: "./icons/snow.png", description: "Neve" };
     case 77:
-      return "🌨️";
+      return { icon: "./icons/snow_grains.png", description: "Granizo" };
     case 80:
     case 81:
     case 82:
-      return "🌧️";
+      return {
+        icon: "./icons/rain_showers.png",
+        description: "Chuva de granizo",
+      };
     case 85:
     case 86:
-      return "🌨️";
+      return {
+        icon: "./icons/snow_showers_heavy.png",
+        description: "Chuva de granizo forte",
+      };
     case 95:
     case 96:
     case 99:
-      return "⛈️";
+      return { icon: "./icons/thunderstorm.png", description: "Tempestade" };
   }
 }

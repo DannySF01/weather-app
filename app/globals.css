@@ -1,37 +1,45 @@
 @import "tailwindcss";
 
 @theme {
-  /* Cores dinâmicas para a tua App de Weather */
-  --color-cold: #3b82f6;
-  --color-warm: #f97316;
-  --color-hot: #ef4444;
+  --color-background: #010a19;
+  --color-surface: #081426;
+  --color-surface-card: #0b1c32;
+  --color-surface-elevated: #0b2342;
 
-  /* Custom border-radius mais suave para os teus cards */
+  --color-primary: #f8f5ec;
+  --color-secondary: #cad5e1;
+  --color-muted: #98b9db;
+  --color-disabled: #7d8da0;
+
+  --color-primary: #157be2;
+  --color-primary-dark: #063d86;
+  --color-accent: #3c72b8;
+
+  --color-hot: oklch(0.75 0.183 55.934);
+  --color-cold: #157be2;
+  --color-thermal: #ff5a82;
+
+  --color-border: rgba(152, 185, 219, 0.18);
+  --color-border-active: rgba(21, 123, 226, 0.55);
+
   --radius-weather: 2rem;
 }
 
 :root {
-  --color: 255, 255, 255;
-  --background: bg-[#0b131e];
-  --card: #172554;
-}
+  --background: #010a19;
+  --surface: #081426;
+  --surface-card: #0b1c32;
+  --surface-elevated: #0b2342;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color: 255, 255, 255;
-    --background: bg-[#0b131e];
-    --card: #172554;
-  }
-}
-
-@theme inline {
-  --color: var(--color-cold);
-  --background: var(--background);
-  --card-background: var(--card);
+  --text-primary: #f8f5ec;
+  --text-secondary: #cad5e1;
+  --text-muted: #98b9db;
 }
 
 body {
-  @apply bg-[#0b131e] text-white;
+  background: var(--background);
+  color: var(--text-primary);
+  user-select: none;
 }
 
 @utility no-scrollbar {
@@ -42,7 +50,30 @@ body {
 }
 
 @utility glass-effect {
-  background-color: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: linear-gradient(
+    145deg,
+    rgba(11, 35, 66, 0.82),
+    rgba(8, 20, 38, 0.72)
+  );
+
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+
+  border: 1px solid rgba(152, 185, 219, 0.18);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 8px 30px rgba(0, 0, 0, 0.25);
+}
+
+@utility glass-active {
+  background: linear-gradient(
+    145deg,
+    rgba(21, 123, 226, 0.28),
+    rgba(6, 61, 134, 0.18)
+  );
+
+  border: 1px solid rgba(21, 123, 226, 0.55);
+
+  box-shadow: 0 0 20px rgba(21, 123, 226, 0.12);
 }

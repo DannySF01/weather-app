@@ -29,6 +29,7 @@ export default function WeatherScroll({ forecast }: WeatherScrollProps) {
       ref={scrollRef}
       {...events}
       className="flex gap-9 overflow-x-auto no-scrollbar snap-x cursor-grab active:cursor-grabbing select-none"
+      tabIndex={-1} // Remove focus from the tab
     >
       {time.map((item, i) => {
         const isNow = new Date().getHours() === parseInt(formatHour(item));
@@ -38,7 +39,7 @@ export default function WeatherScroll({ forecast }: WeatherScrollProps) {
             key={i}
             ref={isNow ? currentHourRef : null}
             className={`
-                snap-center shrink-0 min-w-[70px] p-3 rounded-xl flex flex-col items-center transition-all
+                snap-center shrink-0 min-w-[70px] px-3 rounded-xl flex flex-col items-center transition-all
                 ${isNow ? "bg-accent-blue/20" : "opacity-60"}
             `}
           >
@@ -46,9 +47,12 @@ export default function WeatherScroll({ forecast }: WeatherScrollProps) {
               {isNow ? "Agora" : formatHour(item)}
             </span>
 
-            <span className="text-2xl mb-3">
-              {getWeatherIcon(forecast.weather_code[i])}
-            </span>
+            <img
+              src={getWeatherIcon(forecast.weather_code[i]).icon}
+              alt=""
+              className="mb-3 w-12 h-12 pointer-events-none"
+            />
+
             <span className="font-bold text-lg">
               {forecast.temperature[i]}°
             </span>

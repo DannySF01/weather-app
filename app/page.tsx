@@ -4,14 +4,18 @@ import { getWeatherData } from "../services/weatherService";
 
 export default async function Home() {
   const initialLocation = {
-    coordinates: {
-      lat: Number(headers().get("x-vercel-ip-latitude")) || 41.15,
-      lon: Number(headers().get("x-vercel-ip-longitude")) || -8.63,
+    lat: Number(headers().get("x-vercel-ip-latitude")) || 41.15,
+    lon: Number(headers().get("x-vercel-ip-longitude")) || -8.63,
+    address: {
+      city: "Porto",
+      country: "Portugal",
     },
-    name: "Porto",
   };
 
-  const weatherData = await getWeatherData(initialLocation.coordinates);
+  const weatherData = await getWeatherData({
+    lat: initialLocation.lat,
+    lon: initialLocation.lon,
+  });
 
   return (
     <WeatherDashboard

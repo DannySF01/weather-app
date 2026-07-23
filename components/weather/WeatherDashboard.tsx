@@ -9,16 +9,15 @@ import WeatherCard from "./WeatherCard";
 import WeatherScroll from "./WeatherScroll";
 import { WeatherData } from "../../lib/types/WeatherData";
 import { getWeatherData } from "../../services/weatherService";
-import { getCityName } from "../../services/reverseGeocoding";
+import { getLocationDetails } from "../../services/reverseGeocoding";
+import { Section, SectionHeader } from "../ui/Section";
 
 interface WeatherDashboardProps {
   weatherData: WeatherData;
   initialLocation: {
-    coordinates: {
-      lat: number;
-      lon: number;
-    };
-    name: string;
+    lat: number;
+    lon: number;
+    address: { city: string; country: string };
   };
 }
 
@@ -39,10 +38,14 @@ export default function WeatherDashboard({
       navigator.geolocation.getCurrentPosition(
         (pos) => {
           const { latitude, longitude } = pos.coords;
-          getCityName(latitude, longitude).then((name) => {
+          getLocationDetails(latitude, longitude).then((name) => {
             setLocation({
-              coordinates: { lat: latitude, lon: longitude },
-              name,
+              lat: latitude,
+              lon: longitude,
+              address: {
+                city: name.city,
+                country: name.country,
+              },
             });
           });
         },
@@ -58,29 +61,27 @@ export default function WeatherDashboard({
 
   // Obter dados da localizacao sempre que a localizacao mudar
   useEffect(() => {
-    if (location.coordinates === initialLocation.coordinates) return;
+    if (location.lat === initialLocation.lat) return;
 
     setLoading(true);
-    getWeatherData(location.coordinates)
+    getWeatherData({ lat: location.lat, lon: location.lon })
       .then(setWeather)
       .finally(() => setLoading(false));
   }, [location]);
 
   return (
-    <main className="max-w-7xl mx-auto min-h-screen  text-white p-4 lg:p-8 overflow-x-hidden">
-      <div className="flex justify-between items-center">
+    <main className="max-w-7xl mx-auto min-h-screen p-6 lg:p-8 overflow-x-hidden">
+      <div className="flex justify-between items-center gap-4">
         <GeoSearch
-          onSelect={(city) =>
+          onSelect={(loc) =>
             setLocation({
-              coordinates: {
-                lat: city.latitude,
-                lon: city.longitude,
-              },
-              name: city.name,
+              lat: loc.lat,
+              lon: loc.lon,
+              address: { city: loc.address.city, country: loc.address.country },
             })
           }
         />
-        <p className="text-slate-400 text-xs font-bold tracking-widest uppercase text-center">
+        <p className="text-muted text-xs font-bold tracking-widest uppercase text-center">
           {new Date().toLocaleDateString("pt-PT", {
             day: "2-digit",
             month: "long",
@@ -89,20 +90,21 @@ export default function WeatherDashboard({
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         <div className="lg:col-span-3 flex flex-col gap-6">
-          <WeatherCard today={today} location={location.name} />
+          <WeatherCard
+            today={today}
+            location={{
+              city: location.address.city,
+              country: location.address.country,
+            }}
+          />
 
-          <div className="bg-[#1b2635] rounded-3xl p-6">
-            <p className="text-slate-400 font-bold mb-4 text-xs uppercase tracking-wider">
-              Previsão para 24 horas
-            </p>
-
+          <Section>
+            <SectionHeader>Previsão para 24 horas</SectionHeader>
             <WeatherScroll forecast={forecast} />
-          </div>
+          </Section>
 
-          <div className="@container bg-[#1b2635] rounded-3xl p-6">
-            <p className="text-slate-400 font-bold mb-4 text-xs uppercase tracking-wider">
-              Condições atmosféricas
-            </p>
+          <Section>
+            <SectionHeader>Condições atmosféricas</SectionHeader>
             <div className="grid grid-cols-2 gap-y-6">
               <AirItem
                 label="Sensação Térmica"
@@ -131,35 +133,41 @@ export default function WeatherDashboard({
                 icon="🌅"
               />
             </div>
-          </div>
+          </Section>
         </div>
 
-        <aside className="lg:col-span-1 bg-[#1b2635] rounded-3xl p-6 lg:sticky h-fit">
-          <p className="text-slate-400 font-bold mb-6 text-xs uppercase tracking-wider">
-            Previsão para 7 dias
-          </p>
+        <Section className="lg:col-span-1 lg:sticky h-fit">
+          <SectionHeader> Previsão dos próximos 7 dias</SectionHeader>
           <div className="flex flex-col gap-6">
             {week?.time.map((day, i) => (
               <div
                 key={i}
                 className="flex items-center justify-between border-b border-white/5 pb-4 last:border-0"
               >
-                <span className="text-slate-400 w-16 capitalize">
+                <span className="text-muted w-16 capitalize">
                   {i === 0 ? "hoje" : formatDay(day)}
                 </span>
-                <span className="text-xl">
-                  {getWeatherIcon(week?.weather_code[i])}
-                </span>
-                <div className="font-medium">
-                  <span className="font-bold">{week.temperature_max[i]}°</span>
-                  <span className="text-slate-500 ml-2">
-                    /{week.temperature_min[i]}°
-                  </span>
+                <img
+                  className="w-12 h-12 pointer-events-none"
+                  src={getWeatherIcon(week?.weather_code[i]).icon}
+                  alt={getWeatherIcon(week?.weather_code[i]).description}
+                />
+                <div className="flex gap-2">
+                  <div className="flex items-center gap-1">
+                    <span className="text-hot">↑</span>
+                    <span className="font-bold">{today.temperature_max}°</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <span className="text-cold">↓</span>
+                    <span className="text-slate-300">
+                      {today.temperature_min}°
+                    </span>
+                  </div>
                 </div>
               </div>
             ))}
           </div>
-        </aside>
+        </Section>
       </div>
     </main>
   );
