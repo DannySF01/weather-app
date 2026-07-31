@@ -155,12 +155,14 @@ export default function WeatherDashboard({
                 <div className="flex gap-2">
                   <div className="flex items-center gap-1">
                     <span className="text-hot">↑</span>
-                    <span className="font-bold">{today.temperature_max}°</span>
+                    <span className="font-bold">
+                      {week.temperature_max[i]}°
+                    </span>
                   </div>
                   <div className="flex items-center gap-1">
                     <span className="text-cold">↓</span>
                     <span className="text-slate-300">
-                      {today.temperature_min}°
+                      {week.temperature_min[i]}°
                     </span>
                   </div>
                 </div>
